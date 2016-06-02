@@ -100,7 +100,7 @@ body, html {
 
 .btn.btn-signin {
     /*background-color: #4d90fe; */
-    background-color: rgb(26, 156, 104);
+    background-color: rgb(41, 156, 105);
     /* background-color: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));*/
     padding: 0;
     font-weight: 700;
@@ -132,6 +132,10 @@ body, html {
     color: rgb(12, 97, 33);
 }
 
+.form-margin-top{
+    margin-top:10px;
+}
+
 .margin-top{
-    margin-top:20px;
+    margin-top:30px;
 }
