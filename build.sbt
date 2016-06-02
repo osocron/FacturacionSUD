@@ -11,7 +11,6 @@ libraryDependencies ++= Seq(
   cache,
   ws,
   specs2 % Test,
-  "org.mongodb" % "mongo-java-driver" % "3.2.2",
   "com.typesafe.play" %% "anorm" % "2.4.0"
 )
 

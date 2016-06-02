@@ -1,0 +1,39 @@
+@(title: String)
+
+@main(title) {
+
+    <!-- Insert CSS file to header -->
+    <script type="text/javascript">
+            function loadCSS(filename){
+                var file = document.createElement("link");
+                file.setAttribute("rel", "stylesheet");
+                file.setAttribute("type", "text/css");
+                file.setAttribute("href", filename);
+
+                if (typeof file !== "undefined")
+                    document.head.appendChild(file);
+            }
+            loadCSS("@routes.Assets.at("stylesheets/login.css")");
+    </script>
+
+    <!-- Login -->
+    <div class="container">
+
+        <div class="card card-container">
+
+            <img id="profile-img" class="profile-img-card" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
+            <p id="profile-name" class="profile-name-card">Bienvenido</p>
+
+            <form class="form-signin margin-top">
+
+                <input type="text" id="userName" class="validate" placeholder="Organizacion" required autofocus>
+                <input type="password" id="inputPassword" class="form-control" placeholder="Contraseña" required>
+                <button class="btn btn-lg btn-block btn-signin margin-top" type="submit">Login</button>
+
+            </form><!-- /form -->
+
+        </div><!-- /card-container -->
+
+    </div><!-- /container -->
+
+}
