@@ -25,17 +25,20 @@
         <!-- Custom Styles -->
         <link rel="stylesheet" href="@routes.Assets.at("stylesheets/style.css")">
 
+        <!-- JQuery -->
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery-2.2.3.min.js")"></script>
+
     </head>
     <body>
 
         <!-- NAVBAR -->
         <nav class="navbar navbar-dark default-color-dark">
 
-            <div class="container">
+            <div class="container-fluid">
 
-                <a class="navbar-brand">Facturación SUD</a>
+                <a class="navbar-brand waves-effect waves-light">Facturación SUD</a>
 
-                <ul class="nav navbar-nav">
+                <ul class="nav navbar-nav" id="navBarUl">
                     <li class="nav-item">
                         <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
                     </li>
@@ -52,9 +55,6 @@
         @content
 
         <!-- SCRIPTS -->
-
-        <!-- JQuery -->
-        <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery-2.2.3.min.js")"></script>
 
         <!-- Bootstrap tooltips -->
         <script type="text/javascript" src="@routes.Assets.at("javascripts/tether.min.js")"></script>

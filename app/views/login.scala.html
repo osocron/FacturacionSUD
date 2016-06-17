@@ -1,6 +1,9 @@
-@(title: String)
+@import play.api.data.Form
+@import helper._
+@import model.OrganizacionFormData
+@(organizacionForm: Form[OrganizacionFormData])(implicit messages: Messages)
 
-@main(title) {
+@main("Login") {
 
     <!-- Insert CSS file to header -->
     <script type="text/javascript">
@@ -24,13 +27,11 @@
             <img id="profile-img" class="profile-img-card" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
             <p id="profile-name" class="profile-name-card">Bienvenido</p>
 
-            <form class="form-signin form-margin-top">
-
-                <input type="text" id="userName" class="validate" placeholder="Organizacion" required autofocus>
-                <input type="password" id="inputPassword" class="form-control" placeholder="Contraseña" required>
+            @form(action = routes.Application.authenticate(), 'class -> "form-signin form-margin-top") {
+                @inputText(organizacionForm("user"), 'class -> "validate", 'placeholder -> "Organizacion")
+                @inputPassword(organizacionForm("password"), 'class -> "form-control", 'placeholder -> "Contraseña")
                 <button class="btn btn-lg btn-block btn-signin margin-top" type="submit">Login</button>
-
-            </form><!-- /form -->
+            }
 
         </div><!-- /card-container -->
 

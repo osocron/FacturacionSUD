@@ -1,0 +1,52 @@
+@(title: String)
+
+@main(title) {
+
+    <!-- Add search bar to Navbar -->
+    <script>
+            $(document).ready(function(){
+                $("#navBarUl").after("" +
+                        "<form class=\"navbar-form navbar-right\" role=\"search\">"+
+                        "<div class=\"waves-effect waves-light\">"+
+                        "<input type=\"text\" class=\"form-control\" placeholder=\"Organizacion\" name=\"organizacion\">"+
+                        "</div>"+
+                        "</form>"+
+                        "");
+            });
+    </script>
+
+    <div class="container">
+
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#collapse">Primaria</a>
+                    </h4>
+                </div>
+                <div id="collapse" class="panel-collapse collapse">
+                    <ul class="list-group">
+                        <li class="list-group-item">Gasto 22912</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#collapse2">Primaria</a>
+                    </h4>
+                </div>
+                <div id="collapse2" class="panel-collapse collapse">
+                    <ul class="list-group">
+                        <li class="list-group-item">Gasto 22912</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+}
