@@ -11,7 +11,6 @@ import slick.driver.JdbcProfile
 import slick.driver.MySQLDriver.api._
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.{Failure, Success}
 
 
 /**
@@ -46,13 +45,13 @@ class OrganizacionesDAO @Inject()(protected val dbConfigProvider: DatabaseConfig
 
   val organizaciones = TableQuery[OrganizacionTable]
 
-  def add(organizacion: Organizacion): Future[String] = {
+  def add(organizacion: Organizacion): Future[String] =
     db.run(organizaciones += organizacion).map(res => "Organizacion agregada").recover{
       case ex: Exception => ex.getCause.getMessage
     }
-  }
 
-  def delete(id: Int): Future[Int] = db.run(organizaciones.filter(_.id === id).delete)
+  def delete(id: Int): Future[Int] =
+    db.run(organizaciones.filter(_.id === id).delete)
 
   def get(id: Int): Future[Option[Organizacion]] =
     db.run(organizaciones.filter(_.id === id).result.headOption)

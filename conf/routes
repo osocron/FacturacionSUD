@@ -3,17 +3,22 @@
 # ~~~~
 
 # Login page
-GET     /                           controllers.Application.login
-POST    /authenticate               controllers.Application.authenticate()
+GET     /                                       controllers.Application.login
+POST    /authenticate                           controllers.Application.authenticate()
 
 # Seccion Barrio
-GET     /dashboard                  controllers.Application.dashboard
+GET     /dashboard                              controllers.Administracion.dashboard
+POST    /addOrg                                 controllers.Administracion.addOrg
+
+#Seccion Organizacion
+GET     /dashboard/organizacion/:id             controllers.Administracion.organizacion(id: Int)
+POST    /dashboard/organizacion/addGasto:id     controllers.Administracion.addGasto(id: Int)
 
 #Facturas Upload
-GET     /uploads                    controllers.Application.uploads
-POST    /upload                     controllers.Application.upload
+GET     /uploads                                controllers.Application.uploads
+POST    /upload                                 controllers.Application.upload
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET     /assets/*file                           controllers.Assets.at(path="/public", file)
 
     

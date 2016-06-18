@@ -1,0 +1,49 @@
+@import play.api.data.Form
+@import helper._
+@import model._
+@(idOrganizacion: Int, gastos: Seq[Gasto], gastoForm: Form[GastoFormData])(implicit messages: Messages)
+
+@main("Gastos") {
+
+    <div class="container">
+
+        <a href="@routes.Administracion.dashboard()">Regresar</a>
+
+
+        @form(action = routes.Administracion.addGasto(idOrganizacion)) {
+            <table>
+                <tr>
+                    <td>No. Gasto</td>
+                    <td>Concepto</td>
+                    <td>Importe</td>
+                    <td>Mes</td>
+                    <td>Dia</td>
+                    <td>Año</td>
+                    <td>Comprobado</td>
+                </tr>
+                @for(gasto <- gastos) {
+                    <tr>
+                        <td>@gasto.noGasto</td>
+                        <td>@gasto.concepto</td>
+                        <td>@gasto.importe</td>
+                        <td>@gasto.mes</td>
+                        <td>@gasto.dia</td>
+                        <td>@gasto.anio</td>
+                        <td>@gasto.comprobado</td>
+                    </tr>
+                }
+                <tr>
+                    <td>@inputText(gastoForm("No. Gasto"))</td>
+                    <td>@inputText(gastoForm("Concepto"))</td>
+                    <td>@inputText(gastoForm("Importe"))</td>
+                    <td>@inputText(gastoForm("Mes"))</td>
+                    <td>@inputText(gastoForm("Dia"))</td>
+                    <td>@inputText(gastoForm("Anio"))</td>
+                    <td>@inputText(gastoForm("Comprobado"))</td>
+                </tr>
+            </table>
+            <button type="submit">Agregar</button>
+        }
+    </div>
+
+}

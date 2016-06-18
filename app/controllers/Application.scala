@@ -2,9 +2,8 @@ package controllers
 
 import javax.inject.Inject
 
-import model.{OrganizacionForm, OrganizacionesDAO}
+import model.{Organizacion, OrganizacionForm, OrganizacionesDAO}
 import play.api.mvc._
-
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 
@@ -23,7 +22,8 @@ class Application @Inject()(organizacionesDAO: OrganizacionesDAO) extends Contro
       data => organizacionesDAO.getAll.map(res =>
         if (res.exists(org => org.user.equals(data.user) && org.password.equals(data.password))) {
           data.user match {
-            case "master" => Redirect(routes.Application.dashboard()).withSession("connected" -> "administrador")
+            case "Obispado" => Redirect(routes.Administracion.dashboard()).withSession("connected" -> "administrador")
+            case _  => Ok(s"Bienvenido ${data.user}").withSession("connected" -> data.user)
           }
         }
         else Redirect(routes.Application.login())
@@ -35,13 +35,6 @@ class Application @Inject()(organizacionesDAO: OrganizacionesDAO) extends Contro
     Ok(views.html.barrio.uploads("primaria","Subir Facturas"))
   }
 
-  def dashboard() = Action { request =>
-    request.session.get("connected").map { user =>
-      Ok(views.html.administrador.dashboard(user))
-    }.getOrElse {
-      Unauthorized("No ha iniciado sesión")
-    }
-  }
 
   def upload = Action(parse.multipartFormData) { request =>
     request.body.file("picture").map { picture =>
@@ -52,7 +45,7 @@ class Application @Inject()(organizacionesDAO: OrganizacionesDAO) extends Contro
       Ok("File uploaded")
     }.getOrElse {
       Redirect(routes.Application.uploads).flashing(
-        "error" -> "Missing file")
+      "error" -> "Missing file")
     }
   }
 
