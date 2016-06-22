@@ -31,22 +31,5 @@ class Application @Inject()(organizacionesDAO: OrganizacionesDAO) extends Contro
     )
   }
 
-  def uploads = Action {
-    Ok(views.html.barrio.uploads("primaria","Subir Facturas"))
-  }
-
-
-  def upload = Action(parse.multipartFormData) { request =>
-    request.body.file("picture").map { picture =>
-      import java.io.File
-      val filename = picture.filename
-      val contentType = picture.contentType
-      picture.ref.moveTo(new File(s"files/$filename"))
-      Ok("File uploaded")
-    }.getOrElse {
-      Redirect(routes.Application.uploads).flashing(
-      "error" -> "Missing file")
-    }
-  }
 
 }

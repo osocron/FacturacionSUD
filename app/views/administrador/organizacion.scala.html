@@ -5,13 +5,16 @@
 
 @main("Gastos") {
 
+    <script>
+        var idOrg = @idOrganizacion;
+    </script>
+
     <div class="container">
 
         <a href="@routes.Administracion.dashboard()">Regresar</a>
 
-
         @form(action = routes.Administracion.addGasto(idOrganizacion)) {
-            <table>
+            <table id="gastoTable">
                 <tr>
                     <td>No. Gasto</td>
                     <td>Concepto</td>
@@ -22,7 +25,7 @@
                     <td>Comprobado</td>
                 </tr>
                 @for(gasto <- gastos) {
-                    <tr>
+                    <tr id="@gasto.noGasto">
                         <td>@gasto.noGasto</td>
                         <td>@gasto.concepto</td>
                         <td>@gasto.importe</td>
@@ -45,5 +48,22 @@
             <button type="submit">Agregar</button>
         }
     </div>
+
+    <script>
+            function addTableRowEvent() {
+                var table = document.getElementById("gastoTable");
+                var rows = document.getElementsByTagName("tr");
+                for (var i = 1; i < rows.length - 1; i++) {
+                    var currentRow = table.rows[i];
+                    var createClickHandler = function(row){
+                        return function () {
+                            window.location = "/dashboard/organizacion/"+idOrg+"/"+row.id;
+                        };
+                    };
+                    currentRow.onclick = createClickHandler(currentRow)
+                }
+            }
+            addTableRowEvent();
+    </script>
 
 }

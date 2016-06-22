@@ -33,7 +33,7 @@
         function addTableRowEvent() {
             var table = document.getElementById("orgTable");
             var rows = document.getElementsByTagName("tr");
-            for (var i = 1; i < rows.length; i++) {
+            for (var i = 1; i < rows.length - 1; i++) {
                 var currentRow = table.rows[i];
                 var createClickHandler = function(row){
                     return function () {

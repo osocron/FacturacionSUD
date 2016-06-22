@@ -12,7 +12,8 @@ libraryDependencies ++= Seq(
   ws,
   specs2 % Test,
   "com.typesafe.play" %% "play-slick" % "2.0.0",
-  "mysql" % "mysql-connector-java" % "5.1.25"
+  "mysql" % "mysql-connector-java" % "5.1.25",
+  "com.qifun" %% "stateless-future" % "0.3.2"
 )
 
 unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )  
