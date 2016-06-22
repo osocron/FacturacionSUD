@@ -83,21 +83,16 @@ class Administracion @Inject()(organizacionesDAO: OrganizacionesDAO,
     request.body.file("PDF").map { pdf =>
       request.body.file("XML").map { xml =>
         import java.io.File
-        val pdfFilename = pdf.filename
-        val xmlFileName = xml.filename
-        val pdfPath = s"files/$idOrg/$idGasto/$pdfFilename"
-        val xmlPath = s"files/$idOrg/$idGasto/$xmlFileName"
-        val pdfFile = new File(pdfPath)
-        val xmlFile = new File(xmlPath)
-        pdfFile.mkdirs()
-        xmlFile.mkdirs()
-        pdf.ref.moveTo(new File(s"files/$idOrg/$idGasto/$pdfFilename"), replace = true)
-        xml.ref.moveTo(new File(s"files/$idOrg/$idGasto/$xmlFileName"), replace = true)
+        val pdfPath = s"files/$idOrg/$idGasto/${pdf.filename}"
+        val xmlPath = s"files/$idOrg/$idGasto/${xml.filename}"
+        new File(pdfPath).mkdirs()
+        new File(xmlPath).mkdirs()
+        pdf.ref.moveTo(new File(pdfPath), replace = true)
+        xml.ref.moveTo(new File(xmlPath), replace = true)
         FileUploadForm.form.bindFromRequest.fold(
           errors => Future.successful(Redirect(routes.Administracion.gastos(idOrg, idGasto))),
           data => {
-            val newFile =
-              new FileUpload(0, pdfPath, xmlPath, data.importe, "abril", 2, 2016, idGasto)
+            val newFile = new FileUpload(0, pdfPath, xmlPath, data.importe, "abril", 2, 2016, idGasto)
             fileUploadDAO.add(newFile).map {res =>
               Redirect(routes.Administracion.gastos(idOrg, idGasto))
             }

@@ -9,14 +9,13 @@
 
         <a href="@routes.Administracion.organizacion(idOrg)">Regresar</a>
 
-        <h2>Gastos</h2>
+        <h2>Gasto @gasto.noGasto</h2>
 
         <p>Importe a cubrir: @gasto.importe</p>
 
         @for(file <- files) {
             <p>@file.diaUpload/@file.mesUpload/@file.anioUpload -> @file.pathPDF</p>
-            <p>@file.diaUpload/@file.mesUpload/@file.anioUpload -> @file.pathXML</p>
-            <p>Importe total = @file.importe</p>
+            <p>@file.diaUpload/@file.mesUpload/@file.anioUpload -> @file.pathXML <b>Importe = @file.importe</b></p>
         }
 
         @form(action = routes.Administracion.upload(idOrg, gasto.noGasto), 'enctype -> "multipart/form-data") {
