@@ -7,7 +7,7 @@ import play.api.mvc._
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 
-import scala.concurrent.Future
+import scala.concurrent.{Await, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class Application @Inject()(organizacionesDAO: OrganizacionesDAO) extends Controller {
@@ -23,7 +23,10 @@ class Application @Inject()(organizacionesDAO: OrganizacionesDAO) extends Contro
         if (res.exists(org => org.user.equals(data.user) && org.password.equals(data.password))) {
           data.user match {
             case "Obispado" => Redirect(routes.Administracion.dashboard()).withSession("connected" -> "administrador")
-            case _  => Ok(s"Bienvenido ${data.user}").withSession("connected" -> data.user)
+            case _  => Redirect(routes.Administracion.organizacion(
+              res.find(org =>
+                org.user.equals(data.user) && org.password.equals(data.password)).get.id)
+            ).withSession("connected" -> "orga")
           }
         }
         else Redirect(routes.Application.login())

@@ -64,18 +64,22 @@ class Administracion @Inject()(organizacionesDAO: OrganizacionesDAO,
   }
 
   def gastos(idOrg: Int, idGasto: Long) = Action.async { implicit request =>
-    val qResult= Await.ready(gastoDAO.get(idGasto), Duration.Inf).value.get
-    val gasto: Gasto = qResult match {
-      case Success(option) => option match {
-        case Some(g) => g
-        case None => new Gasto(0L,"",BigDecimal(1),"",0,0,"",0)
-      }
-      case Failure(ex) => new Gasto(0L,"",BigDecimal(1),"",0,0,"",0)
-    }
     request.session.get("connected").map { user =>
-      fileUploadDAO.getFilesByNoGasto(idGasto).map(files =>
-        Ok(views.html.administrador.gastos(idOrg, gasto, files, FileUploadForm.form))
-      )
+      val qResult = Await.ready(gastoDAO.get(idGasto), Duration.Inf).value.get
+      val gasto: Gasto = qResult match {
+        case Success(option) => option match {
+          case Some(g) => g
+          case None => new Gasto(0L, "", BigDecimal(1), "", 0, 0, "", 0)
+        }
+        case Failure(ex) => new Gasto(0L, "", BigDecimal(1), "", 0, 0, "", 0)
+      }
+      request.session.get("connected").map { user =>
+        fileUploadDAO.getFilesByNoGasto(idGasto).map(files =>
+          Ok(views.html.administrador.gastos(idOrg, gasto, files, FileUploadForm.form))
+        )
+      }.getOrElse {
+        Future.successful(Unauthorized("No ha iniciado sesión"))
+      }
     }.getOrElse {
       Future.successful(Unauthorized("No ha iniciado sesión"))
     }
@@ -126,9 +130,17 @@ class Administracion @Inject()(organizacionesDAO: OrganizacionesDAO,
   }
 
   def deleteGasto(noGasto: Long) = Action.async { implicit request =>
-    gastoDAO.delete(noGasto).map(res =>
-      Ok("Deleted")
-    )
+    request.session.get("connected").map { user =>
+      if (user.equals("administrador")) {
+        gastoDAO.delete(noGasto).map(res =>
+          Ok("Deleted")
+        )
+      } else {
+        Future.successful(Unauthorized("No puede borrar un gasto"))
+      }
+    }.getOrElse {
+      Future.successful(Unauthorized("No ha iniciado sesión"))
+    }
   }
 
   def updateOrg(idOrg: Int) = Action.async { implicit request =>
