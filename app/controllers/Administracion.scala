@@ -10,9 +10,10 @@ import play.api.i18n.Messages.Implicits._
 import scala.concurrent.duration._
 import scala.concurrent._
 import scala.concurrent.ExecutionContext.Implicits.global
-import java.io.File
+import java.io.{File, FileInputStream, FileOutputStream}
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.zip.{ZipEntry, ZipOutputStream}
 
 import scala.util.{Failure, Success, Try}
 
@@ -92,9 +93,10 @@ class Administracion @Inject()(organizacionesDAO: OrganizacionesDAO,
   def upload(idOrg: Int, idGasto: Long) = Action.async(parse.multipartFormData) { implicit request =>
     request.body.file("PDF").map { pdf =>
       request.body.file("XML").map { xml =>
+        val orga = getOrg(idOrg)
         import java.io.File
-        val pdfPath = s"files/$idOrg/$idGasto/${pdf.filename}"
-        val xmlPath = s"files/$idOrg/$idGasto/${xml.filename}"
+        val pdfPath = s"files/${orga.user}/$idGasto/${pdf.filename}"
+        val xmlPath = s"files/${orga.user}/$idGasto/${xml.filename}"
         new File(pdfPath).mkdirs()
         new File(xmlPath).mkdirs()
         pdf.ref.moveTo(new File(pdfPath), replace = true)
@@ -120,6 +122,18 @@ class Administracion @Inject()(organizacionesDAO: OrganizacionesDAO,
       Future.successful(Redirect(routes.Administracion.gastos(idOrg, idGasto)).flashing(
         "error" -> "Missing PDF"))
     }
+  }
+
+  def getOrg(id: Int): Organizacion = {
+    val qResult = Await.ready(organizacionesDAO.get(id), Duration.Inf).value.get
+    val orga: Organizacion = qResult match {
+      case Success(option) => option match {
+        case Some(o) => o
+        case None => new Organizacion(0,"","")
+      }
+      case Failure(ex) => new Organizacion(0,"","")
+    }
+    orga
   }
 
 
@@ -170,6 +184,44 @@ class Administracion @Inject()(organizacionesDAO: OrganizacionesDAO,
         )
       }
     )
+  }
+
+  def downloadOrg(idOrg: Int) = Action {
+    val orga = getOrg(idOrg)
+    createZip(s"files/${orga.user}", s"files/${orga.user}.zip")
+    Ok.sendFile(new File(s"files/${orga.user}.zip"))
+  }
+
+  def downloadGasto(idOrg: Int, noGasto: Long) = play.mvc.Results.TODO
+
+
+  def createZip(sourceFolder: String, outputFile: String) = {
+
+    def addDir(zos: ZipOutputStream, srcFile: File): Unit = {
+      val files = srcFile.listFiles()
+      files.foreach(f => {
+        if (f.isDirectory) addDir(zos, f)
+        else {
+          val buffer = new Array[Byte](1024)
+          val fis = new FileInputStream(f)
+          zos.putNextEntry(new ZipEntry(f.getName))
+          var length = fis.read(buffer)
+          while (length >= 0) {
+            zos.write(buffer, 0, length)
+            length = fis.read(buffer)
+          }
+          zos.closeEntry()
+          fis.close()
+        }
+      })
+    }
+
+    val fos = new FileOutputStream(outputFile)
+    val zos = new ZipOutputStream(fos)
+    val srcFile = new File(sourceFolder)
+    addDir(zos, srcFile)
+    zos.close()
+
   }
 
 }

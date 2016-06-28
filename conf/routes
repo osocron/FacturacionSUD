@@ -11,6 +11,7 @@ GET     /dashboard                                              controllers.Admi
 POST    /addOrg                                                 controllers.Administracion.addOrg
 POST    /delOrg/:idOrg                                          controllers.Administracion.deleteOrg(idOrg: Int)
 POST    /updateOrg/:idOrg                                       controllers.Administracion.updateOrg(idOrg: Int)
+GET     /download/:idOrg                                        controllers.Administracion.downloadOrg(idOrg: Int)
 
 #Seccion Organizacion
 GET     /dashboard/organizacion/:id                             controllers.Administracion.organizacion(id: Int)
@@ -18,6 +19,7 @@ GET     /organizacion/:id                                       controllers.Barr
 POST    /dashboard/organizacion/addGasto/:id                    controllers.Administracion.addGasto(id: Int)
 POST    /dashboard/organizacion/delGasto/:noGasto               controllers.Administracion.deleteGasto(noGasto: Long)
 POST    /dashboard/organizacion/updateGasto/:idOrg/:noGasto     controllers.Administracion.updateGasto(idOrg: Int, noGasto: Long)
+GET     /dashboard/organizacion/downloadGasto/:idOrg/:noGasto   controllers.Administracion.downloadGasto(idOrg: Int, noGasto: Long)
 
 #Seccion Gasto
 GET     /dashboard/organizacion/:idOrg/:idGasto                 controllers.Administracion.gastos(idOrg: Int, idGasto: Long)

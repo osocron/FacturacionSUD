@@ -28,6 +28,9 @@ $(document).ready(function () {
                 $("#editForm").attr("action", "/updateOrg/"+orgId);
                 $('#editModal').openModal();
             }
+            else if (key == "download") {
+                window.location = "/download/" + orgId;
+            }
         },
         items: {
             "edit" : {
@@ -37,6 +40,9 @@ $(document).ready(function () {
             "delete": {
                 name: "Borrar",
                 icon: "delete"
+            },
+            "download": {
+                name: "Descargar"
             }
         }
     });
