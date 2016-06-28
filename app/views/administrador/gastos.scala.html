@@ -7,25 +7,107 @@
 
     <div class="container">
 
-        <a href="@routes.Administracion.organizacion(idOrg)">Regresar</a>
+        <div class="card blue-grey lighten-5 z-depth-3">
+            <div class="card-content">
 
-        <h2>Gasto @gasto.noGasto</h2>
+                <div class="row">
+                    <div class="col s12">
+                        <a href="@routes.Administracion.organizacion(idOrg)">Regresar</a>
+                        <h4 class="thin">Gasto @gasto.noGasto</h4>
+                    </div>
+                </div>
 
-        <p>Importe a cubrir: @gasto.importe</p>
+                <div class="row">
+                    <div class="col s12">
+                    @for(file <- files) {
+                        <div class="card blue-grey darken-1 waves-effect waves-block waves-light">
 
-        @for(file <- files) {
-            <p>@file.diaUpload/@file.mesUpload/@file.anioUpload -> @file.pathPDF</p>
-            <p>@file.diaUpload/@file.mesUpload/@file.anioUpload -> @file.pathXML <b>Importe = @file.importe</b></p>
-        }
+                            <div class="card-content white-text">
+                                <div class="row activator">
+                                    <div class="col s7 activator">
+                                        <span class="card-title activator">@file.diaUpload/@file.mesUpload/@file.anioUpload</span>
+                                    </div>
+                                    <div class="col s5 activator">
+                                        <h5 class="activator thin">Importe cubierto = @file.importe</h5>
+                                    </div>
+                                </div>
+                            </div>
 
-        @form(action = routes.Administracion.upload(idOrg, gasto.noGasto), 'enctype -> "multipart/form-data") {
-            <input type="file" name="PDF" accept=".pdf">
-            <input type="file" name="XML" accept=".xml">
-            @inputText(fileForm("Importe"))
-            <p>
-                <input type="submit">
-            </p>
-        }
+
+                            <div class="card-reveal">
+                                <span class="card-title activator">@file.diaUpload/@file.mesUpload/@file.anioUpload</span>
+                                <span>Ruta de archivo PDF</span>
+                                <p class="thin">@file.pathPDF</p>
+
+                                <span>Ruta de archivo XML</span>
+                                <p class="thin">@file.pathXML</p>
+                            </div>
+
+                        </div>
+                    }
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s8">
+                        <h5 class="thin">Importe a cubrir: @gasto.importe</h5>
+                    </div>
+                    <div class="col s4">
+                        <h5 class="thin">Total cubierto: @{files.map((f) => f.importe).sum}</h5>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s12">
+
+                        <form action="/dashboard/organizacion/@idOrg/@gasto.noGasto/upload" method="post" enctype="multipart/form-data">
+                            <div class="row">
+
+                                <div class="file-field input-field col s6">
+                                    <div class="btn">
+                                        <span>Archivo</span>
+                                        <input type="file" name="PDF" accept=".pdf">
+                                    </div>
+                                    <div class="file-path-wrapper">
+                                        <input class="file-path validate" type="text" placeholder="Archivo PDF">
+                                    </div>
+                                </div>
+
+                                <div class="input-field col s6">
+                                    <input type="number" step="0.01" name="Importe" id="importe">
+                                    <label for="importe">Importe</label>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+
+                                <div class="file-field input-field col s6">
+                                    <div class="btn">
+                                        <span>Archivo</span>
+                                        <input type="file" name="XML" accept=".xml">
+                                    </div>
+                                    <div class="file-path-wrapper">
+                                        <input class="file-path validate" type="text" placeholder="Archivo XML">
+                                    </div>
+                                </div>
+
+                                <div class="col s6">
+                                    <div class="right">
+                                        <button class="btn waves-effect waves-light" type="submit" style="margin-top: 25px">
+                                            Subir comprobante
+                                            <i class="material-icons right">send</i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
 
     </div>
 

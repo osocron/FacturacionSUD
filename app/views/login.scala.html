@@ -5,36 +5,56 @@
 
 @main("Login") {
 
-    <!-- Insert CSS file to header -->
-    <script type="text/javascript">
-            function loadCSS(filename){
-                var file = document.createElement("link");
-                file.setAttribute("rel", "stylesheet");
-                file.setAttribute("type", "text/css");
-                file.setAttribute("href", filename);
-
-                if (typeof file !== "undefined")
-                    document.head.appendChild(file);
-            }
-            loadCSS("@routes.Assets.at("stylesheets/login.css")");
-    </script>
-
-    <!-- Login -->
     <div class="container">
+        <br>
+        <br>
+        <br>
+        <br>
 
-        <div class="card card-container">
+        <div class="row">
 
-            <img id="profile-img" class="profile-img-card" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
-            <p id="profile-name" class="profile-name-card">Bienvenido</p>
+            <div class="card blue-grey lighten-5 z-depth-3 col s6 push-s3">
+                <div class="card-content">
 
-            @form(action = routes.Application.authenticate(), 'class -> "form-signin form-margin-top") {
-                @inputText(organizacionForm("user"), 'class -> "validate", 'placeholder -> "Organizacion")
-                @inputPassword(organizacionForm("password"), 'class -> "form-control", 'placeholder -> "Contraseña")
-                <button class="btn btn-lg btn-block btn-signin margin-top" type="submit">Login</button>
-            }
+                    <div class="row">
+                        <div class="center">
+                            <h2 id="profile-name" class="thin">Bienvenido</h2>
+                        </div>
+                    </div>
 
-        </div><!-- /card-container -->
 
-    </div><!-- /container -->
+                    <div class="row">
+                        <div class="col s10 push-s1">
+                            <form action="/authenticate" method="post">
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <input type="text" id="user" name="user" placeholder="Nombre de tu organizacion">
+                                        <label for="user">Organizacion</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <input type="password" id="password" name="password" placeholder="Tu contraseña">
+                                        <label for="password">Contraseña</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field right">
+                                        <button class="btn waves-effect waves-light" type="submit">Login
+                                            <i class="material-icons right">send</i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div> <!--Row-->
+
+
+                </div> <!--Card Content-->
+            </div> <!--Card-->
+
+        </div> <!--Row-->
+
+    </div> <!--Container-->
 
 }

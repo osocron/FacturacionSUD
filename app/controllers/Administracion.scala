@@ -11,6 +11,8 @@ import scala.concurrent.duration._
 import scala.concurrent._
 import scala.concurrent.ExecutionContext.Implicits.global
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
 import scala.util.{Failure, Success, Try}
 
@@ -92,7 +94,11 @@ class Administracion @Inject()(organizacionesDAO: OrganizacionesDAO,
         FileUploadForm.form.bindFromRequest.fold(
           errors => Future.successful(Redirect(routes.Administracion.gastos(idOrg, idGasto))),
           data => {
-            val newFile = new FileUpload(0, pdfPath, xmlPath, data.importe, "abril", 2, 2016, idGasto)
+            val now  = Calendar.getInstance()
+            val month = new SimpleDateFormat("MMM").format(now.getTime)
+            val day = now.get(Calendar.DAY_OF_MONTH)
+            val year = now.get(Calendar.YEAR)
+            val newFile = new FileUpload(0, pdfPath, xmlPath, data.importe, month, day, year, idGasto)
             fileUploadDAO.add(newFile).map {res =>
               Redirect(routes.Administracion.gastos(idOrg, idGasto))
             }
@@ -112,5 +118,42 @@ class Administracion @Inject()(organizacionesDAO: OrganizacionesDAO,
   def getListOfSubDirectories(directoryName: String): List[String] =
     new File(directoryName).listFiles.filter(_.isDirectory).map(_.getName).toList
 
+
+  def deleteOrg(id: Int) = Action.async { implicit request =>
+    organizacionesDAO.delete(id).map(res =>
+      Ok("Deleted")
+    )
+  }
+
+  def deleteGasto(noGasto: Long) = Action.async { implicit request =>
+    gastoDAO.delete(noGasto).map(res =>
+      Ok("Deleted")
+    )
+  }
+
+  def updateOrg(idOrg: Int) = Action.async { implicit request =>
+    OrganizacionForm.form.bindFromRequest.fold(
+      errorForm => Future.successful(Redirect(routes.Administracion.dashboard())),
+      data => {
+        val newOrga = Organizacion(idOrg, data.user, data.password)
+        organizacionesDAO.update(idOrg, newOrga).map(res =>
+          Redirect(routes.Administracion.dashboard())
+        )
+      }
+    )
+  }
+
+  def updateGasto(idOrganizacion: Int, noGasto: Long) = Action.async { implicit request =>
+    GastoForm.form.bindFromRequest.fold(
+      errorForm => Future.successful(Redirect(routes.Administracion.organizacion(idOrganizacion))),
+      data => {
+        val newGasto =
+          Gasto(data.noGasto, data.concepto, data.importe, data.mes, data.dia, data.anio, data.comprobado, idOrganizacion)
+        gastoDAO.update(noGasto, newGasto).map(res =>
+          Redirect(routes.Administracion.organizacion(idOrganizacion))
+        )
+      }
+    )
+  }
 
 }

@@ -3,47 +3,106 @@
 @import model._
 @(organizaciones: Seq[Organizacion], organizacionForm: Form[OrganizacionFormData])(implicit messages: Messages)
 
-@main("Dashboard") {
+    @main("Dashboard") {
 
     <div class="container">
+        <div class="card blue-grey lighten-5 z-depth-3">
+            <div class="card-content">
 
-        <h2>Organizaciones</h2>
-        @form(action = routes.Administracion.addOrg) {
-            <table id="orgTable">
-                <tr>
-                    <td>Usuario</td>
-                    <td>Contraseña</td>
-                </tr>
-                @for(org <- organizaciones) {
-                    <tr id="@org.id">
-                        <td>@org.user</td>
-                        <td>@org.password</td>
-                    </tr>
-                }
-                <tr>
-                    <td>@inputText(organizacionForm("user"))</td>
-                    <td>@inputText(organizacionForm("password"))</td>
-                </tr>
-            </table>
-            <button type="submit">Agregar</button>
-        }
+
+                <div class="row">
+                    <div class="center">
+                        <h2 class="thin">Organizaciones</h2>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s10 push-s1">
+                        <table id="orgTable" class="bordered highlight">
+                            <thead>
+                                <tr>
+                                    <th>Usuario</th>
+                                    <th>Contraseña</th>
+                                </tr>
+                            </thead>
+                            @for(org <- organizaciones) {
+                                <tr id="@org.id" class="dashboard-context">
+                                    <td style="cursor: pointer;">@org.user</td>
+                                    <td style="cursor: pointer;">@org.password</td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s10 push-s1">
+                        <form action="/addOrg" method="post">
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <input name="user" type="text" id="user">
+                                    <label for="user">Organizacion</label>
+                                </div>
+                                <div class="input-field col s6">
+                                    <input name="password" type="text" id="password">
+                                    <label for="password">Contraseña</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="right">
+                                    <button class="btn waves-effect waves-light" type="submit">Agregar
+                                        <i class="material-icons right">send</i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                    <!-- Modal Structure -->
+                <div id="editModal" class="modal">
+                    <form action="" method="post" id="editForm">
+                        <div class="modal-content">
+                            <h4>Modificar Datos</h4>
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <input name="user" type="text" id="editUser">
+                                    <label for="editUser">Organizacion</label>
+                                </div>
+                                <div class="input-field col s6">
+                                    <input name="password" type="text" id="editPassword">
+                                    <label for="editPassword">Contraseña</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="modal-action modal-close waves-effect waves-green btn-flat" type="submit">Modificar
+                                <i class="material-icons right">send</i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+
+            </div>
+        </div>
     </div>
 
-    <script>
-        function addTableRowEvent() {
-            var table = document.getElementById("orgTable");
-            var rows = document.getElementsByTagName("tr");
-            for (var i = 1; i < rows.length - 1; i++) {
-                var currentRow = table.rows[i];
-                var createClickHandler = function(row){
-                    return function () {
-                        window.location = "/dashboard/organizacion/"+row.id;
+    <script type="text/javascript">
+            function addTableRowEvent() {
+                var table = document.getElementById("orgTable");
+                var rows = document.getElementsByTagName("tr");
+                for (var i = 1; i < rows.length; i++) {
+                    var currentRow = table.rows[i];
+                    var createClickHandler = function (row) {
+                        return function () {
+                            window.location = "/dashboard/organizacion/" + row.id;
+                        };
                     };
-                };
-                currentRow.onclick = createClickHandler(currentRow)
+                    currentRow.onclick = createClickHandler(currentRow)
+                }
             }
-        }
-        addTableRowEvent();
+            addTableRowEvent();
     </script>
 
-}
+    }

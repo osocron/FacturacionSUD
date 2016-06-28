@@ -6,58 +6,212 @@
 @main("Gastos") {
 
     <script>
-        var idOrg = @idOrganizacion;
+            var idOrg = @idOrganizacion;
     </script>
 
     <div class="container">
+        <br>
+        <div class="card blue-grey lighten-5 z-depth-3">
+            <div class="card-content">
 
-        <a href="@routes.Administracion.dashboard()">Regresar</a>
+                <div class="row">
+                    <div class="col s1">
+                        <a href="@routes.Administracion.dashboard()">Regresar</a>
+                    </div>
+                </div>
 
-        @form(action = routes.Administracion.addGasto(idOrganizacion)) {
-            <table id="gastoTable">
-                <tr>
-                    <td>No. Gasto</td>
-                    <td>Concepto</td>
-                    <td>Importe</td>
-                    <td>Mes</td>
-                    <td>Dia</td>
-                    <td>Año</td>
-                    <td>Comprobado</td>
-                </tr>
-                @for(gasto <- gastos) {
-                    <tr id="@gasto.noGasto">
-                        <td>@gasto.noGasto</td>
-                        <td>@gasto.concepto</td>
-                        <td>@gasto.importe</td>
-                        <td>@gasto.mes</td>
-                        <td>@gasto.dia</td>
-                        <td>@gasto.anio</td>
-                        <td>@gasto.comprobado</td>
-                    </tr>
-                }
-                <tr>
-                    <td>@inputText(gastoForm("No. Gasto"))</td>
-                    <td>@inputText(gastoForm("Concepto"))</td>
-                    <td>@inputText(gastoForm("Importe"))</td>
-                    <td>@inputText(gastoForm("Mes"))</td>
-                    <td>@inputText(gastoForm("Dia"))</td>
-                    <td>@inputText(gastoForm("Anio"))</td>
-                    <td>@inputText(gastoForm("Comprobado"))</td>
-                </tr>
-            </table>
-            <button type="submit">Agregar</button>
-        }
+
+                <div class="row">
+                    <div class="col s12">
+                        <table id="gastoTable" class="bordered highlight">
+                            <thead>
+                                <tr>
+                                    <th>No. Gasto</th>
+                                    <th>Concepto</th>
+                                    <th>Importe</th>
+                                    <th>Mes</th>
+                                    <th>Dia</th>
+                                    <th>Año</th>
+                                    <th>Comprobado</th>
+                                </tr>
+                            </thead>
+                            @for(gasto <- gastos) {
+                                <tr id="@gasto.noGasto" class="org-context">
+                                    <td style="cursor: pointer;">@gasto.noGasto</td>
+                                    <td style="cursor: pointer;">@gasto.concepto</td>
+                                    <td style="cursor: pointer;">@gasto.importe</td>
+                                    <td style="cursor: pointer;">@gasto.mes</td>
+                                    <td style="cursor: pointer;">@gasto.dia</td>
+                                    <td style="cursor: pointer;">@gasto.anio</td>
+                                    <td style="cursor: pointer;">@gasto.comprobado</td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col s12">
+                        <form action="/dashboard/organizacion/addGasto/@idOrganizacion" method="post" class="col s12">
+                            <div class="row">
+                                <div class="input-field col s4">
+                                    <input name="No. Gasto" type="number" id="noGasto" class="validate">
+                                    <label for="noGasto">No. Gasto</label>
+                                </div>
+                                <div class="input-field col s4">
+                                    <input id="concepto" name="Concepto" type="text" class="validate">
+                                    <label for="concepto">Concepto</label>
+                                </div>
+                                <div class="input-field col s4">
+                                    <input name="Importe" type="number" step="0.01" id="importe" class="validate">
+                                    <label for="importe">Importe</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s3">
+                                    <select name="Mes" id="mes">
+                                        <option value="" disabled selected>Selecciona un mes</option>
+                                        <option value="Enero">Enero</option>
+                                        <option value="Febrero">Febrero</option>
+                                        <option value="Marzo">Marzo</option>
+                                        <option value="Abril">Abril</option>
+                                        <option value="Mayo">Mayo</option>
+                                        <option value="Junio">Junio</option>
+                                        <option value="Julio">Julio</option>
+                                        <option value="Agosto">Agosto</option>
+                                        <option value="Septiembre">Septiembre</option>
+                                        <option value="Octubre">Octubre</option>
+                                        <option value="Noviembre">Noviembre</option>
+                                        <option value="Diciembre">Diciembre</option>
+                                    </select>
+                                    <label for="mes">Mes</label>
+                                </div>
+                                <div class="input-field col s3">
+                                    <select name="Dia" id="dia">
+                                        <option value="" disabled selected>Selecciona un dia</option>
+                                        @for(i <- 1 to 31) {
+                                            <option value="@i">@i</option>
+                                        }
+                                    </select>
+                                    <label for="dia">Dia</label>
+                                </div>
+                                <div class="input-field col s3">
+                                    <select name="Anio" id="anio">
+                                        <option value="" disabled selected>Selecciona un año</option>
+                                        @for(i <- 2015 to 2026) {
+                                            <option value="@i">@i</option>
+                                        }
+                                    </select>
+                                    <label for="anio">Año</label>
+                                </div>
+                                <div class="input-field col s3">
+                                    <select name="Comprobado" id="comprobado">
+                                        <option value="" disabled selected>Selecciona una opción</option>
+                                        <option value="S">Si</option>
+                                        <option value="N">No</option>
+                                    </select>
+                                    <label for="comprobado">Comprobado</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="right">
+                                    <button class="btn waves-effect waves-light" type="submit">Agregar
+                                        <i class="material-icons right">send</i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+                    <!-- Modal Structure -->
+                <div id="editModal" class="modal">
+                    <form action="" method="post" id="editFormGasto">
+                        <div class="modal-content">
+                            <h4>Modificar Datos</h4>
+                            <div class="row">
+                                <div class="input-field col s4">
+                                    <input name="No. Gasto" type="number" id="editNoGasto" class="validate">
+                                    <label for="editNoGasto">No. Gasto</label>
+                                </div>
+                                <div class="input-field col s4">
+                                    <input id="editConcepto" name="Concepto" type="text" class="validate">
+                                    <label for="editConcepto">Concepto</label>
+                                </div>
+                                <div class="input-field col s4">
+                                    <input name="Importe" type="number" step="0.01" id="editImporte" class="validate">
+                                    <label for="editImporte">Importe</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s3">
+                                    <select name="Mes" id="editMes">
+                                        <option value="" disabled selected>Selecciona un mes</option>
+                                        <option value="Enero">Enero</option>
+                                        <option value="Febrero">Febrero</option>
+                                        <option value="Marzo">Marzo</option>
+                                        <option value="Abril">Abril</option>
+                                        <option value="Mayo">Mayo</option>
+                                        <option value="Junio">Junio</option>
+                                        <option value="Julio">Julio</option>
+                                        <option value="Agosto">Agosto</option>
+                                        <option value="Septiembre">Septiembre</option>
+                                        <option value="Octubre">Octubre</option>
+                                        <option value="Noviembre">Noviembre</option>
+                                        <option value="Diciembre">Diciembre</option>
+                                    </select>
+                                    <label for="editMes">Mes</label>
+                                </div>
+                                <div class="input-field col s3">
+                                    <select name="Dia" id="editDia">
+                                        <option value="" disabled selected>Selecciona un dia</option>
+                                        @for(i <- 1 to 31) {
+                                            <option value="@i">@i</option>
+                                        }
+                                    </select>
+                                    <label for="editDia">Dia</label>
+                                </div>
+                                <div class="input-field col s3">
+                                    <select name="Anio" id="editAnio">
+                                        <option value="" disabled selected>Selecciona un año</option>
+                                        @for(i <- 2015 to 2026) {
+                                            <option value="@i">@i</option>
+                                        }
+                                    </select>
+                                    <label for="editAnio">Año</label>
+                                </div>
+                                <div class="input-field col s3">
+                                    <select name="Comprobado" id="editComprobado">
+                                        <option value="" disabled selected>Selecciona una opción</option>
+                                        <option value="S">Si</option>
+                                        <option value="N">No</option>
+                                    </select>
+                                    <label for="editComprobado">Comprobado</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="modal-action modal-close waves-effect waves-green btn-flat" type="submit">Modificar
+                                <i class="material-icons right">send</i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
     </div>
-
     <script>
             function addTableRowEvent() {
                 var table = document.getElementById("gastoTable");
                 var rows = document.getElementsByTagName("tr");
-                for (var i = 1; i < rows.length - 1; i++) {
+                for (var i = 1; i < rows.length; i++) {
                     var currentRow = table.rows[i];
-                    var createClickHandler = function(row){
+                    var createClickHandler = function (row) {
                         return function () {
-                            window.location = "/dashboard/organizacion/"+idOrg+"/"+row.id;
+                            window.location = "/dashboard/organizacion/" + idOrg + "/" + row.id;
                         };
                     };
                     currentRow.onclick = createClickHandler(currentRow)

@@ -29,6 +29,8 @@ object OrganizacionForm{
     )(OrganizacionFormData.apply)(OrganizacionFormData.unapply)
   )
 
+  val deleteForm = Form(single("id" -> number))
+
 }
 
 class OrganizacionTable(tag: Tag) extends Table[Organizacion](tag, "organizacion") {
@@ -57,5 +59,12 @@ class OrganizacionesDAO @Inject()(protected val dbConfigProvider: DatabaseConfig
     db.run(organizaciones.filter(_.id === id).result.headOption)
 
   def getAll: Future[Seq[Organizacion]] = db.run(organizaciones.result)
+
+  def update(idOrg: Int, organizacion: Organizacion): Future[String] = {
+    db.run(organizaciones.filter(_.id === idOrg).update(organizacion)).map(_ =>
+      "Organizacion updated").recover{
+      case ex: Exception => ex.getCause.getMessage
+    }
+  }
 
 }
