@@ -42,9 +42,13 @@ class Administracion @Inject()(organizacionesDAO: OrganizacionesDAO,
 
   def organizacion(idOrganizacion: Int) = Action.async { request =>
     request.session.get("connected").map { user =>
-      gastoDAO.getGastoByOrg(idOrganizacion).map(gastos =>
-        Ok(views.html.administrador.organizacion(idOrganizacion, gastos, GastoForm.form))
-      )
+      gastoDAO.getGastoByOrg(idOrganizacion).map(gastos => {
+        if (user.equals("administrador")) {
+          Ok(views.html.administrador.organizacion(idOrganizacion, gastos, GastoForm.form))
+        } else {
+          Ok(views.html.barrio.barrio(idOrganizacion,gastos))
+        }
+      })
     }.getOrElse {
       Future.successful(Unauthorized("No ha iniciado sesión"))
     }

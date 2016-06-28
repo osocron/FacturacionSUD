@@ -14,6 +14,7 @@ POST    /updateOrg/:idOrg                                       controllers.Admi
 
 #Seccion Organizacion
 GET     /dashboard/organizacion/:id                             controllers.Administracion.organizacion(id: Int)
+GET     /organizacion/:id                                       controllers.Barrio.organizacion(id: Int)
 POST    /dashboard/organizacion/addGasto/:id                    controllers.Administracion.addGasto(id: Int)
 POST    /dashboard/organizacion/delGasto/:noGasto               controllers.Administracion.deleteGasto(noGasto: Long)
 POST    /dashboard/organizacion/updateGasto/:idOrg/:noGasto     controllers.Administracion.updateGasto(idOrg: Int, noGasto: Long)

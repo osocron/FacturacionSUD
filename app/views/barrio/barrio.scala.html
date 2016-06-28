@@ -1,0 +1,72 @@
+@import model._
+@(idOrganizacion: Int, gastos: Seq[Gasto])
+
+@main("Gastos") {
+
+    <script>
+            var idOrg = @idOrganizacion;
+    </script>
+
+    <div class="container">
+        <br>
+        <div class="card blue-grey lighten-5 z-depth-3">
+            <div class="card-content">
+
+                <div class="row">
+                    <div class="col s12">
+                        <h3 class="thin">Gastos</h3>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s12">
+                        <table id="gastoTable" class="bordered highlight">
+                            <thead>
+                                <tr>
+                                    <th>No. Gasto</th>
+                                    <th>Concepto</th>
+                                    <th>Importe</th>
+                                    <th>Mes</th>
+                                    <th>Dia</th>
+                                    <th>Año</th>
+                                    <th>Comprobado</th>
+                                </tr>
+                            </thead>
+                            @for(gasto <- gastos) {
+                                <tr id="@gasto.noGasto">
+                                    <td style="cursor: pointer;">@gasto.noGasto</td>
+                                    <td style="cursor: pointer;">@gasto.concepto</td>
+                                    <td style="cursor: pointer;">@gasto.importe</td>
+                                    <td style="cursor: pointer;">@gasto.mes</td>
+                                    <td style="cursor: pointer;">@gasto.dia</td>
+                                    <td style="cursor: pointer;">@gasto.anio</td>
+                                    <td style="cursor: pointer;">@gasto.comprobado</td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                </div>
+
+                <br>
+
+            </div>
+        </div>
+    </div>
+    <script>
+            function addTableRowEvent() {
+                var table = document.getElementById("gastoTable");
+                var rows = document.getElementsByTagName("tr");
+                for (var i = 1; i < rows.length; i++) {
+                    var currentRow = table.rows[i];
+                    var createClickHandler = function (row) {
+                        return function () {
+                            window.location = "/dashboard/organizacion/" + idOrg + "/" + row.id;
+                        };
+                    };
+                    currentRow.onclick = createClickHandler(currentRow)
+                }
+            }
+            addTableRowEvent();
+    </script>
+
+}

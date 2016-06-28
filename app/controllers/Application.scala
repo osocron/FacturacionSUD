@@ -23,7 +23,7 @@ class Application @Inject()(organizacionesDAO: OrganizacionesDAO) extends Contro
         if (res.exists(org => org.user.equals(data.user) && org.password.equals(data.password))) {
           data.user match {
             case "Obispado" => Redirect(routes.Administracion.dashboard()).withSession("connected" -> "administrador")
-            case _  => Redirect(routes.Administracion.organizacion(
+            case _  => Redirect(routes.Barrio.organizacion(
               res.find(org =>
                 org.user.equals(data.user) && org.password.equals(data.password)).get.id)
             ).withSession("connected" -> "orga")
