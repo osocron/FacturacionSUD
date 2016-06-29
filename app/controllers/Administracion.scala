@@ -190,12 +190,12 @@ class Administracion @Inject()(organizacionesDAO: OrganizacionesDAO,
 
   def downloadOrg(idOrg: Int) = Action {
     val orga = getOrg(idOrg)
-    val zipPath = s"files${File.separator}${orga.user}.zip"
+    val zipPath = s"public${File.separator}files${File.separator}${orga.user}.zip"
     val zipFile = new File(zipPath)
     zipFile.getParentFile.mkdirs()
     zipFile.createNewFile()
-    createZip(s"files${File.separator}${orga.user}", zipPath)
-    Ok.sendFile(new File(s"files${File.separator}${orga.user}.zip"))
+    createZip(s"public${File.separator}files${File.separator}${orga.user}", zipPath)
+    Ok.sendFile(new File(s"public${File.separator}files${File.separator}${orga.user}.zip"))
   }
 
   def downloadGasto(idOrg: Int, noGasto: Long) = play.mvc.Results.TODO
