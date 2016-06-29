@@ -45,7 +45,8 @@ class FileUploadTable(tag: Tag) extends Table[FileUpload](tag, "file") {
   def gasto = foreignKey("fk_file_1", noGasto, gastos)(_.noGasto,
     onUpdate = ForeignKeyAction.Cascade,
     onDelete = ForeignKeyAction.Cascade)
-  override def * : ProvenShape[FileUpload] = (idFile, pathPDF, pathXML, importe, mes, dia, anio, noGasto)<>(FileUpload.tupled, FileUpload.unapply)
+  override def * : ProvenShape[FileUpload] = (idFile, pathPDF, pathXML,
+    importe, mes, dia, anio, noGasto)<>(FileUpload.tupled, FileUpload.unapply)
 
 }
 

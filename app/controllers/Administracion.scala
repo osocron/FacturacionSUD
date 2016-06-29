@@ -95,14 +95,12 @@ class Administracion @Inject()(organizacionesDAO: OrganizacionesDAO,
       request.body.file("XML").map { xml =>
         val orga = getOrg(idOrg)
         import java.io.File
-        val pdfPath = s"files${File.separator}${orga.user}${File.separator}$idGasto${File.separator}${pdf.filename}"
-        val xmlPath = s"files${File.separator}${orga.user}${File.separator}$idGasto${File.separator}${xml.filename}"
+        val pdfPath = s"public/files${File.separator}${orga.user}${File.separator}$idGasto${File.separator}${pdf.filename}"
+        val xmlPath = s"public/files${File.separator}${orga.user}${File.separator}$idGasto${File.separator}${xml.filename}"
         val pdfFile = new File(pdfPath)
         val xmlFile = new File(xmlPath)
         pdfFile.getParentFile.mkdirs()
         xmlFile.getParentFile.mkdirs()
-        pdfFile.createNewFile()
-        xmlFile.createNewFile()
         pdf.ref.moveTo(new File(pdfPath), replace = true)
         xml.ref.moveTo(new File(xmlPath), replace = true)
         FileUploadForm.form.bindFromRequest.fold(
