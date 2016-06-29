@@ -95,10 +95,14 @@ class Administracion @Inject()(organizacionesDAO: OrganizacionesDAO,
       request.body.file("XML").map { xml =>
         val orga = getOrg(idOrg)
         import java.io.File
-        val pdfPath = s"files/${orga.user}/$idGasto/${pdf.filename}"
-        val xmlPath = s"files/${orga.user}/$idGasto/${xml.filename}"
-        new File(pdfPath).mkdirs()
-        new File(xmlPath).mkdirs()
+        val pdfPath = s"files${File.separator}${orga.user}${File.separator}$idGasto${File.separator}${pdf.filename}"
+        val xmlPath = s"files${File.separator}${orga.user}${File.separator}$idGasto${File.separator}${xml.filename}"
+        val pdfFile = new File(pdfPath)
+        val xmlFile = new File(xmlPath)
+        pdfFile.getParentFile.mkdirs()
+        xmlFile.getParentFile.mkdirs()
+        pdfFile.createNewFile()
+        xmlFile.createNewFile()
         pdf.ref.moveTo(new File(pdfPath), replace = true)
         xml.ref.moveTo(new File(xmlPath), replace = true)
         FileUploadForm.form.bindFromRequest.fold(
@@ -188,8 +192,12 @@ class Administracion @Inject()(organizacionesDAO: OrganizacionesDAO,
 
   def downloadOrg(idOrg: Int) = Action {
     val orga = getOrg(idOrg)
-    createZip(s"files/${orga.user}", s"files/${orga.user}.zip")
-    Ok.sendFile(new File(s"files/${orga.user}.zip"))
+    val zipPath = s"files${File.separator}${orga.user}.zip"
+    val zipFile = new File(zipPath)
+    zipFile.getParentFile.mkdirs()
+    zipFile.createNewFile()
+    createZip(s"files${File.separator}${orga.user}", zipPath)
+    Ok.sendFile(new File(s"files${File.separator}${orga.user}.zip"))
   }
 
   def downloadGasto(idOrg: Int, noGasto: Long) = play.mvc.Results.TODO
