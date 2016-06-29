@@ -94,15 +94,15 @@ class Administracion @Inject()(organizacionesDAO: OrganizacionesDAO,
     request.body.file("PDF").map { pdf =>
       request.body.file("XML").map { xml =>
         val orga = getOrg(idOrg)
-        import java.io.File
-        val pdfPath = s"public/files${File.separator}${orga.user}${File.separator}$idGasto${File.separator}${pdf.filename}"
-        val xmlPath = s"public/files${File.separator}${orga.user}${File.separator}$idGasto${File.separator}${xml.filename}"
-        val pdfFile = new File(pdfPath)
-        val xmlFile = new File(xmlPath)
-        pdfFile.getParentFile.mkdirs()
-        xmlFile.getParentFile.mkdirs()
-        pdf.ref.moveTo(new File(pdfPath), replace = true)
-        xml.ref.moveTo(new File(xmlPath), replace = true)
+        val pdfFileName = pdf.filename
+        val xmlFileName = xml.filename
+        val pdfInputStream = new FileInputStream(pdf.ref.file)
+        val xmlInputStream = new FileInputStream(xml.ref.file)
+        val contentPDF = new Array[Byte](pdf.ref.file.length().asInstanceOf[Int])
+        val contentXMl = new Array[Byte](xml.ref.file.length().asInstanceOf[Int])
+        pdfInputStream.read(contentPDF)
+        xmlInputStream.read(contentXMl)
+        if (pdfInputStream != null && xmlInputStream != null) pdfInputStream.close(); xmlInputStream.close()
         FileUploadForm.form.bindFromRequest.fold(
           errors => Future.successful(Redirect(routes.Administracion.gastos(idOrg, idGasto))),
           data => {
@@ -110,7 +110,7 @@ class Administracion @Inject()(organizacionesDAO: OrganizacionesDAO,
             val month = new SimpleDateFormat("MMM").format(now.getTime)
             val day = now.get(Calendar.DAY_OF_MONTH)
             val year = now.get(Calendar.YEAR)
-            val newFile = new FileUpload(0, pdfPath, xmlPath, data.importe, month, day, year, idGasto)
+            val newFile = new FileUpload(0, pdfFileName, xmlFileName, contentPDF, contentXMl, data.importe, month, day, year, idGasto)
             fileUploadDAO.add(newFile).map {res =>
               Redirect(routes.Administracion.gastos(idOrg, idGasto))
             }
@@ -189,13 +189,38 @@ class Administracion @Inject()(organizacionesDAO: OrganizacionesDAO,
   }
 
   def downloadOrg(idOrg: Int) = Action {
+
+    val gastosQuery = Await.ready(gastoDAO.getGastoByOrg(idOrg), Duration.Inf).value.get
+    val gastos: Seq[Gasto] = gastosQuery match {
+      case Success(seq) => seq
+      case Failure(ex) => Seq()
+    }
+    val fileQuery: Seq[Try[Seq[FileUpload]]] =
+      for {gasto <- gastos} yield Await.ready(fileUploadDAO.getByGasto(gasto.noGasto), Duration.Inf).value.get
+
+    val files: Seq[FileUpload] = fileQuery.flatMap(ty => ty match {
+      case Success(seq) => seq
+      case Failure(exception) => Seq()
+    })
+
+
     val orga = getOrg(idOrg)
-    val zipPath = s"public${File.separator}files${File.separator}${orga.user}.zip"
-    val zipFile = new File(zipPath)
-    zipFile.getParentFile.mkdirs()
-    zipFile.createNewFile()
-    createZip(s"public${File.separator}files${File.separator}${orga.user}", zipPath)
-    Ok.sendFile(new File(s"public${File.separator}files${File.separator}${orga.user}.zip"))
+    val zipFile = File.createTempFile(orga.user, ".zip")
+
+    val fos = new FileOutputStream(zipFile)
+    val zos = new ZipOutputStream(fos)
+
+    for {f <- files } {
+      zos.putNextEntry(new ZipEntry(f.namePDF))
+      zos.write(f.contentPDF, 0, f.contentPDF.length)
+      zos.closeEntry()
+      zos.putNextEntry(new ZipEntry(f.nameXML))
+      zos.write(f.contentXML, 0, f.contentXML.length)
+      zos.closeEntry()
+    }
+    zos.close()
+    zipFile.deleteOnExit()
+    Ok.sendFile(zipFile)
   }
 
   def downloadGasto(idOrg: Int, noGasto: Long) = play.mvc.Results.TODO

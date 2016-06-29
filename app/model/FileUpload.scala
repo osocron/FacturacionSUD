@@ -16,8 +16,10 @@ import scala.concurrent.ExecutionContext.Implicits.global
   * Created by osocron on 6/21/16.
   */
 case class FileUpload(idFile: Int,
-                      pathPDF: String,
-                      pathXML: String,
+                      namePDF: String,
+                      nameXML: String,
+                      contentPDF: Array[Byte],
+                      contentXML: Array[Byte],
                       importe: BigDecimal,
                       mesUpload: String,
                       diaUpload: Int,
@@ -35,8 +37,10 @@ class FileUploadTable(tag: Tag) extends Table[FileUpload](tag, "file") {
   val gastos = TableQuery[GastoTable]
 
   def idFile = column[Int]("idfile", O.PrimaryKey, O.AutoInc)
-  def pathPDF = column[String]("pathPDF")
-  def pathXML = column[String]("pathXML")
+  def namePDF = column[String]("namePDF")
+  def nameXML = column[String]("nameXML")
+  def contentPDF = column[Array[Byte]]("contentPDF")
+  def contentXML = column[Array[Byte]]("contentXML")
   def importe = column[BigDecimal]("importe")
   def mes = column[String]("mesUpload")
   def dia = column[Int]("diaUpload")
@@ -45,7 +49,7 @@ class FileUploadTable(tag: Tag) extends Table[FileUpload](tag, "file") {
   def gasto = foreignKey("fk_file_1", noGasto, gastos)(_.noGasto,
     onUpdate = ForeignKeyAction.Cascade,
     onDelete = ForeignKeyAction.Cascade)
-  override def * : ProvenShape[FileUpload] = (idFile, pathPDF, pathXML,
+  override def * : ProvenShape[FileUpload] = (idFile, namePDF, nameXML, contentPDF, contentXML,
     importe, mes, dia, anio, noGasto)<>(FileUpload.tupled, FileUpload.unapply)
 
 }
@@ -54,6 +58,8 @@ class FileUploadDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProv
   extends HasDatabaseConfigProvider[JdbcProfile]{
 
   val files = TableQuery[FileUploadTable]
+
+  val gastos = TableQuery[GastoTable]
 
   def add(fileUpload: FileUpload): Future[String] =
     db.run(files += fileUpload).map(res => "Gasto agregado").recover {
@@ -64,6 +70,9 @@ class FileUploadDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProv
 
   def get(idFile: Int): Future[Option[FileUpload]] =
     db.run(files.filter(_.idFile === idFile).result.headOption)
+
+  def getByGasto(noGasto: Long): Future[Seq[FileUpload]] =
+    db.run(files.filter(_.noGasto === noGasto).result)
 
   def getAll: Future[Seq[FileUpload]] = db.run(files.result)
 

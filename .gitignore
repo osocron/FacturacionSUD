@@ -4,6 +4,7 @@ project/target
 target
 tmp
 .history
+files
 /.idea
 /*.iml
 /out
