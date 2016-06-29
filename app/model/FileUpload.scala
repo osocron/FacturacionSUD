@@ -71,9 +71,6 @@ class FileUploadDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProv
   def get(idFile: Int): Future[Option[FileUpload]] =
     db.run(files.filter(_.idFile === idFile).result.headOption)
 
-  def getByGasto(noGasto: Long): Future[Seq[FileUpload]] =
-    db.run(files.filter(_.noGasto === noGasto).result)
-
   def getAll: Future[Seq[FileUpload]] = db.run(files.result)
 
   def getFilesByNoGasto(noGasto: Long): Future[Seq[FileUpload]] =

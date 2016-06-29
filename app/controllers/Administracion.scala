@@ -189,24 +189,36 @@ class Administracion @Inject()(organizacionesDAO: OrganizacionesDAO,
   }
 
   def downloadOrg(idOrg: Int) = Action {
-
     val gastosQuery = Await.ready(gastoDAO.getGastoByOrg(idOrg), Duration.Inf).value.get
     val gastos: Seq[Gasto] = gastosQuery match {
       case Success(seq) => seq
       case Failure(ex) => Seq()
     }
     val fileQuery: Seq[Try[Seq[FileUpload]]] =
-      for {gasto <- gastos} yield Await.ready(fileUploadDAO.getByGasto(gasto.noGasto), Duration.Inf).value.get
-
+      for {gasto <- gastos} yield Await.ready(fileUploadDAO.getFilesByNoGasto(gasto.noGasto), Duration.Inf).value.get
     val files: Seq[FileUpload] = fileQuery.flatMap(ty => ty match {
       case Success(seq) => seq
       case Failure(exception) => Seq()
     })
-
-
     val orga = getOrg(idOrg)
     val zipFile = File.createTempFile(orga.user, ".zip")
+    createZip(files, zipFile)
+    Ok.sendFile(zipFile)
+  }
 
+  def downloadGasto(idOrg: Int, noGasto: Long) = Action {
+    val fileQuery = Await.ready(fileUploadDAO.getFilesByNoGasto(noGasto), Duration.Inf).value.get
+    val files = fileQuery match {
+      case Success(seq) => seq
+      case Failure(exception) => Seq()
+    }
+    val orga = getOrg(idOrg)
+    val zipFile = File.createTempFile(orga.user, ".zip")
+    createZip(files, zipFile)
+    Ok.sendFile(zipFile)
+  }
+
+  def createZip(files: Seq[FileUpload], zipFile: File) = {
     val fos = new FileOutputStream(zipFile)
     val zos = new ZipOutputStream(fos)
 
@@ -220,39 +232,7 @@ class Administracion @Inject()(organizacionesDAO: OrganizacionesDAO,
     }
     zos.close()
     zipFile.deleteOnExit()
-    Ok.sendFile(zipFile)
   }
 
-  def downloadGasto(idOrg: Int, noGasto: Long) = play.mvc.Results.TODO
-
-
-  def createZip(sourceFolder: String, outputFile: String) = {
-
-    def addDir(zos: ZipOutputStream, srcFile: File): Unit = {
-      val files = srcFile.listFiles()
-      files.foreach(f => {
-        if (f.isDirectory) addDir(zos, f)
-        else {
-          val buffer = new Array[Byte](1024)
-          val fis = new FileInputStream(f)
-          zos.putNextEntry(new ZipEntry(f.getName))
-          var length = fis.read(buffer)
-          while (length >= 0) {
-            zos.write(buffer, 0, length)
-            length = fis.read(buffer)
-          }
-          zos.closeEntry()
-          fis.close()
-        }
-      })
-    }
-
-    val fos = new FileOutputStream(outputFile)
-    val zos = new ZipOutputStream(fos)
-    val srcFile = new File(sourceFolder)
-    addDir(zos, srcFile)
-    zos.close()
-
-  }
 
 }

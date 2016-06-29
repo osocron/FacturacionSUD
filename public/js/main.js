@@ -70,6 +70,9 @@ $(document).ready(function () {
                 $("#editFormGasto").attr("action", "/dashboard/organizacion/updateGasto/"+idOrg+"/"+noGasto);
                 $('#editModal').openModal();
             }
+            else if (key == "download") {
+                window.location = "/dashboard/organizacion/downloadGasto/"+idOrg+"/"+noGasto;
+            }
         },
         items: {
             "edit" : {
@@ -79,6 +82,9 @@ $(document).ready(function () {
             "delete": {
                 name: "Borrar",
                 icon: "delete"
+            },
+            "download": {
+                name: "Descargar"
             }
         }
     });
