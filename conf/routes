@@ -3,27 +3,30 @@
 # ~~~~
 
 # Login page
-GET     /                                                       controllers.Application.login
-POST    /authenticate                                           controllers.Application.authenticate()
+GET     /                                                               controllers.Application.login
+POST    /authenticate                                                   controllers.Application.authenticate()
 
 # Seccion Barrio
-GET     /dashboard                                              controllers.Administracion.dashboard
-POST    /addOrg                                                 controllers.Administracion.addOrg
-POST    /delOrg/:idOrg                                          controllers.Administracion.deleteOrg(idOrg: Int)
-POST    /updateOrg/:idOrg                                       controllers.Administracion.updateOrg(idOrg: Int)
-GET     /download/:idOrg                                        controllers.Administracion.downloadOrg(idOrg: Int)
+GET     /dashboard                                                      controllers.Administracion.dashboard
+POST    /addOrg                                                         controllers.Administracion.addOrg
+POST    /delOrg/:idOrg                                                  controllers.Administracion.deleteOrg(idOrg: Int)
+POST    /updateOrg/:idOrg                                               controllers.Administracion.updateOrg(idOrg: Int)
+GET     /download/:idOrg                                                controllers.Administracion.downloadOrg(idOrg: Int)
 
 #Seccion Organizacion
-GET     /dashboard/organizacion/:id                             controllers.Administracion.organizacion(id: Int)
-GET     /organizacion/:id                                       controllers.Barrio.organizacion(id: Int)
-POST    /dashboard/organizacion/addGasto/:id                    controllers.Administracion.addGasto(id: Int)
-POST    /dashboard/organizacion/delGasto/:noGasto               controllers.Administracion.deleteGasto(noGasto: Long)
-POST    /dashboard/organizacion/updateGasto/:idOrg/:noGasto     controllers.Administracion.updateGasto(idOrg: Int, noGasto: Long)
-GET     /dashboard/organizacion/downloadGasto/:idOrg/:noGasto   controllers.Administracion.downloadGasto(idOrg: Int, noGasto: Long)
+GET     /dashboard/organizacion/:id                                     controllers.Administracion.organizacion(id: Int)
+GET     /organizacion/:id                                               controllers.Barrio.organizacion(id: Int)
+POST    /dashboard/organizacion/addGasto/:id                            controllers.Administracion.addGasto(id: Int)
+POST    /dashboard/organizacion/delGasto/:noGasto                       controllers.Administracion.deleteGasto(noGasto: Long)
+POST    /dashboard/organizacion/updateGasto/:idOrg/:noGasto             controllers.Administracion.updateGasto(idOrg: Int, noGasto: Long)
+GET     /dashboard/organizacion/downloadGasto/:idOrg/:noGasto           controllers.Administracion.downloadGasto(idOrg: Int, noGasto: Long)
 
 #Seccion Gasto
-GET     /dashboard/organizacion/:idOrg/:idGasto                 controllers.Administracion.gastos(idOrg: Int, idGasto: Long)
-POST    /dashboard/organizacion/:idOrg/:idGasto/upload          controllers.Administracion.upload(idOrg: Int, idGasto: Long)
+GET     /dashboard/organizacion/:idOrg/:idGasto                         controllers.Administracion.gastos(idOrg: Int, idGasto: Long)
+POST    /dashboard/organizacion/:idOrg/:idGasto/upload                  controllers.Administracion.upload(idOrg: Int, idGasto: Long)
+POST    /dashborad/organizacion/deleteFile/:idOrg/:idGasto/:idUpload    controllers.Administracion.delUpload(idOrg: Int, idGasto: Long, idUpload: Int)
+POST    /dashborad/organizacion/updateFile/:idOrg/:idGasto/:idUpload    controllers.Administracion.updateFile(idOrg: Int, idGasto: Long, idUpload: Int)
+GET     /dashboard/organizacion/downloadFile/:idOrg/:idGasto/:idUpload  controllers.Administracion.downloadFile(idOrg: Int, idGasto: Long, idUpload: Int)
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file                                           controllers.Assets.at(path="/public", file)
+GET     /assets/*file                                                   controllers.Assets.at(path="/public", file)

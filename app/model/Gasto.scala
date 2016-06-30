@@ -87,7 +87,7 @@ class GastoDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
 
   def update(noGasto: Long, gasto: Gasto): Future[String] =
     db.run(gastos.filter(_.noGasto === noGasto ).update(gasto)).map(_ =>
-      "Gasto Actualizado").recover{
+      "Gasto Actualizado").recover {
       case ex: Exception => ex.getCause.getMessage
     }
 

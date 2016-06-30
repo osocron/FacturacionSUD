@@ -76,4 +76,10 @@ class FileUploadDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProv
   def getFilesByNoGasto(noGasto: Long): Future[Seq[FileUpload]] =
     db.run(files.filter(_.noGasto === noGasto).result)
 
+  def updateImporte(idFile: Int, importe: BigDecimal): Future[String] =
+    db.run(files.filter(_.idFile === idFile).map(_.importe).update(importe)).map(_ =>
+      "Upload actualizado").recover {
+      case ex: Exception => ex.getCause.getMessage
+    }
+
 }

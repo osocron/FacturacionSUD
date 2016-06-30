@@ -213,7 +213,7 @@ class Administracion @Inject()(organizacionesDAO: OrganizacionesDAO,
       case Failure(exception) => Seq()
     }
     val orga = getOrg(idOrg)
-    val zipFile = File.createTempFile(orga.user, ".zip")
+    val zipFile = File.createTempFile(orga.user+noGasto+"_", ".zip")
     createZip(files, zipFile)
     Ok.sendFile(zipFile)
   }
@@ -232,6 +232,47 @@ class Administracion @Inject()(organizacionesDAO: OrganizacionesDAO,
     }
     zos.close()
     zipFile.deleteOnExit()
+  }
+
+  def delUpload(idOrg: Int, noGasto: Long, idUpload: Int) = Action.async { implicit request =>
+    request.session.get("connected").map { user =>
+      if (user.equals("administrador")) {
+        fileUploadDAO.delete(idUpload).map(res =>
+          Ok("Deleted")
+        )
+      } else {
+        Future.successful(Unauthorized("No puede borrar los archivos"))
+      }
+    }.getOrElse {
+      Future.successful(Unauthorized("No ha iniciado sesión"))
+    }
+  }
+
+
+  def updateFile(idOrg: Int, idGasto: Long, idUpload: Int) = Action.async {implicit request =>
+    FileUploadForm.form.bindFromRequest.fold(
+      errorForm => Future.successful(Redirect(routes.Administracion.gastos(idOrg, idGasto))),
+      data => {
+        fileUploadDAO.updateImporte(idUpload, data.importe).map(res =>
+          Redirect(routes.Administracion.gastos(idOrg, idGasto))
+        )
+      }
+    )
+  }
+
+  def downloadFile(idOrg: Int, idGasto: Long, idUpload: Int) = Action {
+    val fileQuery = Await.ready(fileUploadDAO.get(idUpload), Duration.Inf).value.get
+    val file: FileUpload = fileQuery match {
+      case Success(f) => f match {
+        case Some(mFile) => mFile
+        case None => new FileUpload(0,"","",Array[Byte](),Array[Byte](),BigDecimal(0),"",0,0,0)
+      }
+      case Failure(exception) => new FileUpload(0,"","",Array[Byte](),Array[Byte](),BigDecimal(0),"",0,0,0)
+    }
+    val orga = getOrg(idOrg)
+    val zipFile = File.createTempFile(file.namePDF+"_", ".zip")
+    createZip(Seq(file), zipFile)
+    Ok.sendFile(zipFile)
   }
 
 

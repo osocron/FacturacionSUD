@@ -89,6 +89,49 @@ $(document).ready(function () {
         }
     });
 
+
+    $.contextMenu({
+        selector: '.file-context',
+        autoHide: true,
+        callback: function(key, options) {
+            var idFile = $(this).attr('id');
+            if (key === "delete") {
+                var conf = confirm("¿Está seguro de borrar los archivos?\n\n " +
+                    "¡Al hacerlo se perderán los archivos y no podrán ser recuperados!\n");
+                if (conf == true) {
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function () {
+                        if (xhttp.readyState == 4 && xhttp.status == 200) {
+                            document.getElementById(idFile).remove();
+                        }
+                    };
+                    xhttp.open("POST", "/dashborad/organizacion/deleteFile/"+fIdOrg+"/"+fNoGasto+"/"+idFile, true);
+                    xhttp.send();
+                }
+            }
+            else if (key == "edit") {
+                $("#fileEditForm").attr("action", "/dashborad/organizacion/updateFile/"+fIdOrg+"/"+fNoGasto+"/"+idFile);
+                $('#fileEditModal').openModal();
+            }
+            else if (key == "download") {
+                window.location = "/dashboard/organizacion/downloadFile/"+fIdOrg+"/"+fNoGasto+"/"+idFile;
+            }
+        },
+        items: {
+            "edit" : {
+                name: "Editar",
+                icon: "edit"
+            },
+            "delete": {
+                name: "Borrar",
+                icon: "delete"
+            },
+            "download": {
+                name: "Descargar"
+            }
+        }
+    });
+
 });
 
 
