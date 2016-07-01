@@ -39,9 +39,6 @@
       color: $context-menu-text-color-disabled;
     }
   }
-  &.context-menu-icon--fa span {
-    font-family: sans-serif;
-  }
 }
 
 
@@ -93,7 +90,6 @@
 }
 
 .context-menu-input.context-menu-hover {
-  background-color: #EEE;
   cursor: default;
 }
 

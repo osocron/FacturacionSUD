@@ -11,6 +11,9 @@
 .context-menu-icon-delete {
   @include context-menu-item-icon(delete);
 }
+.context-menu-icon-download {
+  @include context-menu-item-icon(download);
+}
 .context-menu-icon-edit {
   @include context-menu-item-icon(edit);
 }

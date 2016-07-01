@@ -8,7 +8,7 @@ $(document).ready(function () {
     $.contextMenu({
         selector: '.dashboard-context',
         autoHide: true,
-        callback: function(key, options) {
+        callback: function (key, options) {
             var orgId = $(this).attr('id');
             if (key === "delete") {
                 var conf = confirm("¿Está seguro de borrar la organización?\n\n " +
@@ -25,7 +25,7 @@ $(document).ready(function () {
                 }
             }
             else if (key == "edit") {
-                $("#editForm").attr("action", "/updateOrg/"+orgId);
+                $("#editForm").attr("action", "/updateOrg/" + orgId);
                 $('#editModal').openModal();
             }
             else if (key == "download") {
@@ -33,16 +33,17 @@ $(document).ready(function () {
             }
         },
         items: {
-            "edit" : {
+            "edit": {
                 name: "Editar",
-                icon: "edit"
+                icon: "paste"
             },
             "delete": {
                 name: "Borrar",
                 icon: "delete"
             },
             "download": {
-                name: "Descargar"
+                name: "Descargar",
+                icon: "edit"
             }
         }
     });
@@ -50,7 +51,7 @@ $(document).ready(function () {
     $.contextMenu({
         selector: '.org-context',
         autoHide: true,
-        callback: function(key, options) {
+        callback: function (key, options) {
             var noGasto = $(this).attr('id');
             if (key === "delete") {
                 var conf = confirm("¿Está seguro de borrar el gasto?\n\n " +
@@ -67,24 +68,25 @@ $(document).ready(function () {
                 }
             }
             else if (key == "edit") {
-                $("#editFormGasto").attr("action", "/dashboard/organizacion/updateGasto/"+idOrg+"/"+noGasto);
+                $("#editFormGasto").attr("action", "/dashboard/organizacion/updateGasto/" + idOrg + "/" + noGasto);
                 $('#editModal').openModal();
             }
             else if (key == "download") {
-                window.location = "/dashboard/organizacion/downloadGasto/"+idOrg+"/"+noGasto;
+                window.location = "/dashboard/organizacion/downloadGasto/" + idOrg + "/" + noGasto;
             }
         },
         items: {
-            "edit" : {
+            "edit": {
                 name: "Editar",
-                icon: "edit"
+                icon: "paste"
             },
             "delete": {
                 name: "Borrar",
                 icon: "delete"
             },
             "download": {
-                name: "Descargar"
+                name: "Descargar",
+                icon: "edit"
             }
         }
     });
@@ -93,7 +95,7 @@ $(document).ready(function () {
     $.contextMenu({
         selector: '.file-context',
         autoHide: true,
-        callback: function(key, options) {
+        callback: function (key, options) {
             var idFile = $(this).attr('id');
             if (key === "delete") {
                 var conf = confirm("¿Está seguro de borrar los archivos?\n\n " +
@@ -105,29 +107,30 @@ $(document).ready(function () {
                             document.getElementById(idFile).remove();
                         }
                     };
-                    xhttp.open("POST", "/dashborad/organizacion/deleteFile/"+fIdOrg+"/"+fNoGasto+"/"+idFile, true);
+                    xhttp.open("POST", "/dashborad/organizacion/deleteFile/" + fIdOrg + "/" + fNoGasto + "/" + idFile, true);
                     xhttp.send();
                 }
             }
             else if (key == "edit") {
-                $("#fileEditForm").attr("action", "/dashborad/organizacion/updateFile/"+fIdOrg+"/"+fNoGasto+"/"+idFile);
+                $("#fileEditForm").attr("action", "/dashborad/organizacion/updateFile/" + fIdOrg + "/" + fNoGasto + "/" + idFile);
                 $('#fileEditModal').openModal();
             }
             else if (key == "download") {
-                window.location = "/dashboard/organizacion/downloadFile/"+fIdOrg+"/"+fNoGasto+"/"+idFile;
+                window.location = "/dashboard/organizacion/downloadFile/" + fIdOrg + "/" + fNoGasto + "/" + idFile;
             }
         },
         items: {
-            "edit" : {
+            "edit": {
                 name: "Editar",
-                icon: "edit"
+                icon: "paste"
             },
             "delete": {
                 name: "Borrar",
                 icon: "delete"
             },
             "download": {
-                name: "Descargar"
+                name: "Descargar",
+                icon: "edit"
             }
         }
     });
