@@ -219,10 +219,10 @@ class Administracion @Inject()(organizacionesDAO: OrganizacionesDAO,
   }
 
   def createZip(files: Seq[FileUpload], zipFile: File) = {
+    val disFiles = distinctFiles(files)
     val fos = new FileOutputStream(zipFile)
     val zos = new ZipOutputStream(fos)
-
-    for {f <- files } {
+    for {f <- disFiles } {
       zos.putNextEntry(new ZipEntry(f.namePDF))
       zos.write(f.contentPDF, 0, f.contentPDF.length)
       zos.closeEntry()
@@ -232,6 +232,14 @@ class Administracion @Inject()(organizacionesDAO: OrganizacionesDAO,
     }
     zos.close()
     zipFile.deleteOnExit()
+  }
+
+  def distinctFiles(files: Seq[FileUpload]): Seq[FileUpload] = {
+    val indexed = files.zipWithIndex
+    val diff = indexed.map(t => (FileUpload(t._1.idFile, t._2+t._1.namePDF,
+      t._2+t._1.nameXML, t._1.contentPDF, t._1.contentXML,
+      t._1.importe, t._1.mesUpload, t._1.diaUpload, t._1.anioUpload, t._1.noGasto), t._2))
+    diff.unzip._1
   }
 
   def delUpload(idOrg: Int, noGasto: Long, idUpload: Int) = Action.async { implicit request =>
