@@ -69,7 +69,23 @@ $(document).ready(function () {
             }
             else if (key == "edit") {
                 $("#editFormGasto").attr("action", "/dashboard/organizacion/updateGasto/" + idOrg + "/" + noGasto);
-                $('#editModal').openModal();
+                $("#editNoGasto").val(noGasto);
+                var elemArr = [];
+                $(this).children('td').each(function () {
+                    elemArr.push($(this).text());
+                });
+                $("#editConcepto").val(elemArr[1]);
+                $("#editImporte").val(elemArr[2]);
+                $("#editMes").val(elemArr[3]);
+                $("#editMes").material_select();
+                $("#editDia").val(elemArr[4]);
+                $("#editDia").material_select();
+                $("#editAnio").val(elemArr[5]);
+                $("#editAnio").material_select();
+                $("#editComprobado").val(elemArr[6]);
+                $("#editComprobado").material_select();
+                Materialize.updateTextFields();
+                $('#editModalOrg').openModal();
             }
             else if (key == "download") {
                 window.location = "/dashboard/organizacion/downloadGasto/" + idOrg + "/" + noGasto;
