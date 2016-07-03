@@ -40,7 +40,7 @@
 
 
                             <div class="card-reveal">
-                                <span class="card-title activator">@file.diaUpload/@file.mesUpload/@file.anioUpload</span>
+                                <span class="card-title">@file.diaUpload/@file.mesUpload/@file.anioUpload</span>
                                 <span>Nombre de archivo PDF</span>
                                 <p class="thin">@file.namePDF</p>
 
@@ -59,6 +59,19 @@
                     </div>
                     <div class="col s4">
                         <h5 class="thin">Total cubierto: @{files.map((f) => f.importe).sum}</h5>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s12">
+                        <h4 class="thin">Formulario</h4>
+                        <p>
+                            Utilize los botones "PDF" y "XML" para seleccionar de su computadora los archivos PDF y XML
+                            que comprueben el gasto a cubrir. Asegúrese de ingresar también el importe que estos archivos
+                            cubren y al finalizar de clic al botón "Subir comprobante". Usted podrá subir cuantos
+                            comprobantes sean necesarios para cubrir el importe del gasto que se le asignó. Si tuviera
+                            algún excendente favor de llenar una papeleta y entregar el excedente al barrio.
+                        </p>
                     </div>
                 </div>
 

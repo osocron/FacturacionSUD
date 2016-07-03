@@ -59,11 +59,19 @@ class Administracion @Inject()(organizacionesDAO: OrganizacionesDAO,
     GastoForm.form.bindFromRequest.fold(
       errorForm => Future.successful(Redirect(routes.Administracion.organizacion(idOrganizacion))),
       data => {
-        val newGasto =
-          Gasto(data.noGasto, data.concepto, data.importe, data.mes, data.dia, data.anio, data.comprobado, idOrganizacion)
-        gastoDAO.add(newGasto).map(res =>
-          Redirect(routes.Administracion.organizacion(idOrganizacion))
-        )
+        val gastosQuery = Await.ready(gastoDAO.getAll, Duration.Inf).value.get
+        val gastos: Seq[Gasto] = gastosQuery match {
+          case Success(seq) => seq
+          case Failure(ex) => Seq()
+        }
+        if (!gastos.exists(_.noGasto == data.noGasto)) {
+          val newGasto =
+            Gasto(data.noGasto, data.concepto, data.importe, data.mes, data.dia, data.anio, data.comprobado, idOrganizacion)
+          gastoDAO.add(newGasto).map(res =>
+            Redirect(routes.Administracion.organizacion(idOrganizacion))
+          )
+        }
+        else Future.successful(Redirect(routes.Administracion.organizacion(idOrganizacion)))
       }
     )
   }
