@@ -20,7 +20,7 @@ class Application @Inject()(organizacionesDAO: OrganizacionesDAO) extends Contro
     OrganizacionForm.form.bindFromRequest.fold(
       formWithErrors => Future.successful(BadRequest(views.html.login(formWithErrors))),
       data => organizacionesDAO.getAll.map(res =>
-        if (res.exists(org => org.user.equals(data.user) && org.password.equals(data.password))) {
+        if (res.nonEmpty && res.exists(org => org.user.equals(data.user) && org.password.equals(data.password))) {
           data.user match {
             case "Obispado" => Redirect(routes.Administracion.dashboard()).withSession("connected" -> "administrador")
             case _  => Redirect(routes.Barrio.organizacion(

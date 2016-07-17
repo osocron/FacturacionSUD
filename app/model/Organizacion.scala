@@ -58,7 +58,9 @@ class OrganizacionesDAO @Inject()(protected val dbConfigProvider: DatabaseConfig
   def get(id: Int): Future[Option[Organizacion]] =
     db.run(organizaciones.filter(_.id === id).result.headOption)
 
-  def getAll: Future[Seq[Organizacion]] = db.run(organizaciones.result)
+  def getAll: Future[Seq[Organizacion]] = db.run(organizaciones.result).recover{
+    case ex: Exception => Seq()
+  }
 
   def update(idOrg: Int, organizacion: Organizacion): Future[String] = {
     db.run(organizaciones.filter(_.id === idOrg).update(organizacion)).map(_ =>
